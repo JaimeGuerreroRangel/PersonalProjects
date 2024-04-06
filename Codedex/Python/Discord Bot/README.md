@@ -16,7 +16,7 @@ pip3 install --user google-api-python-client
 Jokes Functionality:
 
 The bot also fetches random jokes from an external API. For more information about the API and its functionality, visit the Official Joke API GitHub page (https://github.com/15Dkatz/official_joke_api?tab=readme-ov-file).
-By following these steps, you can ensure your bot has access to YouTube's vast library for music recommendations and keeps your server members engaged with a steady stream of jokes.
+
 
 Español
 Este repositorio del bot de Discord, creado por Jaime Guerrero, no solo proporciona entretenimiento y recomendaciones musicales, sino que también automatiza la adición de chistes, mejorando la interacción en el servidor con humor. Para aquellos interesados en extender su funcionalidad con búsquedas de música de YouTube, aquí se explica cómo configurar la API de Google e instalar la biblioteca de cliente necesaria:

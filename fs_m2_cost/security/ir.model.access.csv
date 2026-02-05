@@ -1,0 +1,16 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_field_service_specialty_user,field_service_specialty_user,model_field_service_specialty,base.group_user,1,1,1,1
+access_field_service_rate_user,field_service_rate_user,model_field_service_rate,base.group_user,1,1,1,1
+access_field_service_type_user,access_field_service_type_user,model_field_service_type,base.group_user,1,1,1,1
+access_fs_timesheet_report_wizard,fs.timesheet.report.wizard,model_fs_timesheet_report_wizard,base.group_user,1,1,1,1
+access_fs_timesheet_report_line,fs.timesheet.report.line,model_fs_timesheet_report_line,base.group_user,1,1,1,1
+access_task_kpi_project_user,access.task.kpi.project.user,model_task_kpi,project.group_project_user,1,1,1,1
+access_task_kpi_reason_wizard_user,access_task_kpi_reason_wizard_user,model_task_kpi_reason_wizard,project.group_project_user,1,1,1,0
+access_approval_approver_user,access_approval_approver_user,approvals.model_approval_approver,base.group_user,1,0,0,0
+access_approval_approver_manager,access_approval_approver_manager,approvals.model_approval_approver,approvals.group_approval_manager,1,1,1,1
+access_fs_arrival_kpi_wizard_manager,access.fs.arrival.kpi.wizard.manager,model_fs_arrival_kpi_wizard,industry_fsm.group_fsm_manager,1,1,1,1
+access_fsm_task_image_user,fsm_task_image_user,model_fsm_task_image,base.group_user,1,1,1,1
+access_fs_fieldservice_stats_wizard_manager,fs.fieldservice.stats.wizard manager,model_fs_fieldservice_stats_wizard,industry_fsm.group_fsm_manager,1,1,1,1
+access_fs_fieldservice_stats_wizard_user,fs.fieldservice.stats.wizard user,model_fs_fieldservice_stats_wizard,industry_fsm.group_fsm_user,1,1,1,1
+access_fs_fieldservice_stats_line_manager,fs.fieldservice.stats.line manager,model_fs_fieldservice_stats_line,industry_fsm.group_fsm_manager,1,1,1,1
+access_fs_fieldservice_stats_line_user,fs.fieldservice.stats.line user,model_fs_fieldservice_stats_line,industry_fsm.group_fsm_user,1,1,1,1

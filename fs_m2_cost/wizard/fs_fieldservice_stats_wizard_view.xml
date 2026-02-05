@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Vista del wizard de KPIs FS -->
+        <record id="fs_fieldservice_stats_wizard_view" model="ir.ui.view">
+            <field name="name">fs.fieldservice.stats.wizard.form</field>
+            <field name="model">fs.fieldservice.stats.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Resumen Field Service">
+                    <!-- Contenedor principal: una sola columna (filas apiladas) -->
+                    <header>
+                        <button name="action_compute"
+                                string="Recalcular"
+                                type="object"
+                                class="btn-primary"/>
+
+                         <button name="action_export_pdf_status"
+                                string="Exportar PDF"
+                                type="object"
+                                class="btn-secondary"/>
+  
+                        <button string="Cerrar"
+                                special="cancel"
+                                class="btn-secondary"/>
+                    </header>
+                    <group col="1">
+
+                        <!-- BLOQUE PERÍODO -->
+                        <group string="Período" col="2">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+
+                        <!-- BLOQUE DATOS GENERALES -->
+                        <group string="Datos generales" col="2">
+
+                            <!-- Columna izquierda -->
+                            <group>
+                                <!-- Colocaciones realizadas -->
+                                <label for="installation_count"/>
+                                <div class="o_row">
+                                    <field name="installation_count" readonly="1"/>
+                                </div>
+
+                                <!-- Colocaciones a tiempo -->
+                                <label for="installation_on_time"/>
+                                <div class="o_row">
+                                    <field name="installation_on_time" readonly="1"/>
+                                </div>
+
+                                <!-- Colocaciones tarde -->
+                                <label for="installation_late"/>
+                                <div class="o_row">
+                                    <field name="installation_late" readonly="1"/>
+                                </div>
+
+                                <!-- Colocaciones sin llegada -->
+                                <label for="installation_no_show"/>
+                                <div class="o_row">
+                                    <field name="installation_no_show" readonly="1"/>
+                                </div>
+                            </group>
+
+                            <!-- Columna derecha -->
+                            <group>
+                                <!-- M² instalados -->
+                                <label for="m2_installed_total"/>
+                                <div class="o_row">
+                                    <field name="m2_installed_total" readonly="1"/>
+                                    <button name="action_open_m2_timesheets"
+                                            type="object"
+                                            icon="fa-eye"
+                                            class="oe_link"
+                                            invisible="m2_installed_total == 0"/>
+                                </div>
+
+                                <!-- Tomas de medida realizadas -->
+                                <label for="measurement_count"/>
+                                <div class="o_row">
+                                    <field name="measurement_count" readonly="1"/>
+                                    <button name="action_open_measurements"
+                                            type="object"
+                                            icon="fa-eye"
+                                            class="oe_link"
+                                            invisible="measurement_count == 0"/>
+                                </div>
+
+                                <!-- Tomas de medida con venta -->
+                                <label for="measurement_sale_count"/>
+                                <div class="o_row">
+                                    <field name="measurement_sale_count" readonly="1"/>
+                                </div>
+                            </group>
+                        </group>
+
+                    </group>
+
+                    <notebook>
+                        <page string="Resumen por colocador">
+                            <field name="line_ids" readonly="1">
+                                <list>
+                                    <field name="user_id"/>
+                                    <field name="tasks_done"/>
+                                    <field name="m2_installed"/>
+                                    <field name="m2_pending"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+
+                    
+                </form>
+            </field>
+        </record>
+
+        <!-- Acción del wizard -->
+        <record id="action_fs_fieldservice_stats_wizard" model="ir.actions.act_window">
+            <field name="name">Resumen Field Service</field>
+            <field name="res_model">fs.fieldservice.stats.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="fs_fieldservice_stats_wizard_view"/>
+            <field name="target">current</field>
+        </record>
+
+        <!-- Menú en Reportes del Field Service -->
+        <menuitem id="menu_fs_fieldservice_stats"
+                  name="Reporte Coordinador"
+                  parent="industry_fsm.fsm_menu_reporting"
+                  action="action_fs_fieldservice_stats_wizard"
+                  sequence="50"/>
+    </data>
+</odoo>

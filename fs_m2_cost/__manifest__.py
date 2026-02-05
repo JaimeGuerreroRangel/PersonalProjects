@@ -1,0 +1,68 @@
+# fs_m2_cost/__manifest__.py
+{
+    "name": "Field Service M2 Cost",
+    "version": "1.0",
+    "author": "Kubric",
+    "category": "Services/Field Service",
+    "summary": "Control de costo por m2 instalado en Field Service",
+    "license": "LGPL-3",
+    "depends": [
+        "base",
+        "sale_management",
+        "project",
+        "sale_project",
+        "hr_timesheet",
+        "product",
+        "industry_fsm",
+        "mail",
+        "approvals",
+        "hr_expense",
+        "sale_stock",
+        "sale",
+        "purchase",
+        "purchase_stock",
+    ],
+    "data": [
+        # Security
+        "security/ir.model.access.csv",
+        # Views
+        "views/fs_especialidad_views.xml",
+        "views/fs_product_views.xml",
+        "views/project_task_inherit.xml",
+        "views/fs_res_config_settings_view.xml",
+        "views/fs_res_users_views.xml",
+        "views/fs_sale_order_views.xml",
+        "views/fs_service_type_views.xml",
+        "views/fs_stage_views.xml",
+        "views/fs_tabulador_views.xml",
+        "views/fs_task_approval_views.xml",
+        "views/fs_task_conditions.xml",
+        "views/fs_task_views.xml",
+        "views/fs_timesheet_views.xml",
+        "views/fs_historical_task.xml",
+        "views/uom_uom_views.xml",
+        "views/fs_image_evidence_view.xml",
+        # Wizards
+        "wizard/fs_commision_report.xml",
+        "wizard/fs_reason_cancel.xml",
+        "wizard/fs_timesheet_report_wizard_views.xml",
+        "wizard/fs_arrival_kpi_wizard_view.xml",
+        "wizard/fs_fieldservice_stats_wizard_view.xml",
+        "wizard/fs_fieldservice_stats_report.xml",
+        # Data
+        "data/mail_templates_fs_task.xml",
+        "data/mail_tamplates_task_state.xml",
+        "data/mail_template_confirmacion_tarea.xml",
+        "data/approval_category_fs.xml",
+        "data/fs_arrival_cron.xml",
+        # Templates
+        "templates/worksheet_display_none.xml",
+    ],
+    "assets": {
+        "web.assets_backend": [
+            "fs_m2_cost/static/src/scss/fs_image_evidence.scss",
+        ],
+    },
+    "installable": True,
+    "application": False,
+}

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="worksheet_time_and_material_hide_tables"
+          inherit_id="industry_fsm_sale.worksheet_time_and_material">
+      <!-- 🔹 Encabezado: Unit Price -->
+    <xpath expr="//table[contains(@class,'o_main_table')]//th[@t-if='not hide_price and final_subtotal != 0 or is_any_total_discount_line']"
+           position="attributes">
+        <attribute name="style">display:none;</attribute>
+    </xpath>
+
+    <!-- 🔹 Encabezado: Taxes -->
+    <xpath expr="//table[contains(@class,'o_main_table')]//th[@t-if='not hide_price and final_tax']"
+           position="attributes">
+        <attribute name="style">display:none;</attribute>
+    </xpath>
+
+    <!-- 🔹 Encabezado: Amount -->
+    <xpath expr="//table[contains(@class,'o_main_table')]//th[@t-if='not hide_price']"
+           position="attributes">
+        <attribute name="style">display:none;</attribute>
+    </xpath>
+
+    <!-- 🔹 Celda cuerpo: Precio unitario -->
+    <xpath expr="//table[contains(@class,'o_main_table')]//td[@t-if='not hide_price']"
+           position="attributes">
+        <!-- Forzamos a que nunca se pinte -->
+        <attribute name="t-if">False</attribute>
+    </xpath>
+
+    <!-- 🔹 Celda cuerpo: Impuestos -->
+    <xpath expr="//table[contains(@class,'o_main_table')]//td[@t-if='not hide_price and final_tax']"
+           position="attributes">
+        <attribute name="t-if">False</attribute>
+    </xpath>
+
+    <!-- 🔹 Celda cuerpo: Importe (total de línea) -->
+    <xpath expr="//table[contains(@class,'o_main_table')]//td[contains(@class,'o_price_total')]"
+           position="attributes">
+        <attribute name="t-if">False</attribute>
+    </xpath>
+
+    <!-- Ocultar tabla de totales -->
+    <xpath expr="//div[@name='so_total_summary']//table" position="attributes">
+        <attribute name="style">display:none;</attribute>
+    </xpath>
+
+     <!-- 🔹 Leyenda de políticas de colocación debajo de la tabla -->
+    <xpath expr="//table[contains(@class,'o_main_table')]" position="after">
+        <t t-if="doc.company_id.fs_installation_policy">
+            <div class="mt-3">
+                <strong>Políticas de colocación</strong>
+                <p t-out="doc.company_id.fs_installation_policy"
+                    style="white-space: pre-line;"/>
+            </div>
+        </t>
+    </xpath>
+
+    
+</template>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data noupdate="1">
+
+    <record id="approval_category_fs_reprogram" model="approval.category">
+      <field name="name">Reprogramación de tarea FS</field>
+      <field name="company_id" ref="base.main_company"/>
+      <field name="approval_minimum">1</field>
+      <field name="has_reference">required</field>
+      <field name="has_date">required</field>
+    </record>
+
+    <record id="approval_category_fs_travel" model="approval.category">
+      <field name="name">Viáticos Field Service</field>
+      <field name="company_id" ref="base.main_company"/>
+      <field name="has_reference">required</field>
+      <field name="has_date">required</field>
+      <field name="has_amount">required</field>
+    </record>
+
+  </data>
+</odoo>

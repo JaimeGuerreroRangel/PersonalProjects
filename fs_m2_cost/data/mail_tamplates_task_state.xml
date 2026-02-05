@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- 💌 Tarea rechazada -->
+        <record id="mail_fs_task_rejected" model="mail.template">
+            <field name="name">FS - Tarea rechazada</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="subject">[FS] Tarea rechazada: ${object.fs_sequence or object.name}</field>
+            <field name="email_from">${object.company_id.email or user.email or ''}</field>
+            <field name="email_to">
+                ${','.join(
+                    object.company_id.fs_coordinator_installation_ids.mapped('email') +
+                    object.company_id.fs_coordinator_leveling_ids.mapped('email') +
+                    object.company_id.fs_coordinator_evaluator_ids.mapped('email')
+                ) or ''}
+            </field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">
+                    <div style="max-width: 720px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden;">
+
+                        <!-- Encabezado -->
+                        <div style="background-color:#c62828; color:#ffffff; padding:16px 20px;">
+                            <div style="font-size:11px; letter-spacing:1px; text-transform:uppercase; opacity:0.85;">
+                                Field Service · Notificación
+                            </div>
+                            <h2 style="margin:6px 0 4px 0; font-size:18px; font-weight:bold;">
+                                Tarea rechazada
+                            </h2>
+                            <p style="margin:0; font-size:13px;">
+                                Folio: 
+                                <strong>
+                                    <t t-out="object.fs_sequence or object.name"/>
+                                </strong>
+                            </p>
+                        </div>
+
+                        <!-- Contenido principal -->
+                        <div style="padding:18px 20px 16px 20px; background-color:#ffffff;">
+                            <p style="margin:0 0 8px 0;">Hola,</p>
+                            <p style="margin:0 0 14px 0; line-height:1.5;">
+                                La tarea 
+                                <strong><t t-out="object.fs_sequence or object.name"/></strong>
+                                ha sido <strong style="color:#c62828;">rechazada</strong> por
+                                <strong><t t-out="user.name"/></strong>.
+                            </p>
+
+                            <!-- Datos de la tarea -->
+                            <table style="border-collapse:collapse; width:100%; margin:8px 0 12px 0;">
+                                <tr style="background-color:#fafafa;">
+                                    <td style="padding:6px 10px; font-weight:bold; width:160px; border-bottom:1px solid #eeeeee;">
+                                        Cliente
+                                    </td>
+                                    <td style="padding:6px 10px; border-bottom:1px solid #eeeeee;">
+                                        <t t-out="object.sale_order_id.partner_id.display_name or ''"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:6px 10px; font-weight:bold; border-bottom:1px solid #eeeeee;">
+                                        Orden de venta
+                                    </td>
+                                    <td style="padding:6px 10px; border-bottom:1px solid #eeeeee;">
+                                        <t t-out="object.sale_order_id.name or ''"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:6px 10px; font-weight:bold;">
+                                        Fecha planeada
+                                    </td>
+                                    <td style="padding:6px 10px;">
+                                        <t t-if="object.date_deadline">
+                                            <t t-esc="format_date(object.date_deadline)"/>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Motivo del rechazo -->
+                            <div style="margin-top:12px; padding:10px 12px; background-color:#fff3f3; border-left:4px solid #c62828; border-radius:3px;">
+                                <div style="font-weight:bold; margin-bottom:4px;">
+                                    Motivo del rechazo:
+                                </div>
+                                <div style="white-space:pre-line;">
+                                    <t t-out="object.task_kpi_ids and object.task_kpi_ids[-1].reason or ''"/>
+                                </div>
+                            </div>
+
+                            <!-- CTA -->
+                            <p style="margin-top:18px; margin-bottom:0;">
+                                Puedes revisar la tarea directamente en Odoo:
+                            </p>
+                            <p style="margin:8px 0 0 0; text-align:center;">
+                                <a t-att-href="object.get_base_url() + '/web#id=%s&amp;model=project.task&amp;view_type=form' % object.id"
+                                style="display:inline-block; padding:8px 16px; background-color:#004c97; color:#ffffff; text-decoration:none; border-radius:4px; font-size:13px; font-weight:bold;">
+                                    Abrir tarea
+                                </a>
+                            </p>
+                        </div>
+
+                        <!-- Pie -->
+                        <div style="padding:10px 20px 12px 20px; background-color:#fafafa; border-top:1px solid #e0e0e0;">
+                            <p style="margin:0; font-size:11px; color:#777;">
+                                Este mensaje fue generado automáticamente por el módulo Field Service. 
+                                Por favor, no respondas directamente a este correo.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

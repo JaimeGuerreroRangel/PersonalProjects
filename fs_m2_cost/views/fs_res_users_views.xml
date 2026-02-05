@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data noupdate="1">
+    <record id="view_res_users_form_fs_inherit" model="ir.ui.view">
+        <field name="name">res.users.form.field.service.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="Field Service">
+                    <group>
+                        <field name="tariff_type"/>
+                        <field name="specialty_ids" widget="many2many_tags"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</data>

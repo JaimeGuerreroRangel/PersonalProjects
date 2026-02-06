@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template id="template" xml:space="preserve">
+    <t t-name="RestrictQuantityPopup" owl="1">
+        <div class="popup popup-textinput">
+            <div class="modal-header btn-lg btn-primary">
+            <h4 class="modal-title text-white text-center">Product Quantity Limit Alert</h4>
+                </div>
+            <div class="modal-body popup-textarea-wrap">
+                <span style="color:#811331"><t t-esc="props.body"/></span>
+                <br/>
+            </div>
+            <div class="footer footer-flex modal-footer">
+                <div class="button cancel btn btn-lg btn-primary" t-on-click="cancel">
+                      Ok
+                </div>
+
+            </div>
+        </div>
+    </t>
+</template>

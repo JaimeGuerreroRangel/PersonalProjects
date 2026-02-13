@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="group_fsm_task_admin" model="res.groups">
+            <field name="name">Administrador Colocadores</field>
+            <field name="comment">Permiso especifico para administradores Colocadores</field>
+        </record>
+
+        <!-- Usuario: Solo sus tareas -->
+        <record id="group_fsm_task_user_own" model="res.groups">
+            <field name="name">Colocadores</field>
+            <field name="comment">Permiso especifico para usuarios Colocadores</field>
+        </record>
+
+    </data>
+</odoo>

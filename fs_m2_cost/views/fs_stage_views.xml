@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <data noupdate="1">
+            <record id="view_fs_stage_form_inherit" model="ir.ui.view">
+                <field name="name">fs.stage.form.inherit</field>
+                <field name="model">project.task.type</field>
+                <field name="inherit_id" ref="project.task_type_edit"/>
+                <field name="arch" type="xml">
+                    <xpath expr="/form//field[@name='sms_template_id']" position="before">
+                        <field name="fs_is_backlog_stage"/>
+                        <field name="fs_is_planning_stage"/>
+                        <field name="fs_is_done_stage"/>
+                    </xpath>
+                </field>
+            </record>
+    </data>

@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <!-- Acción de reporte NUEVA para gráficos -->
+    <record id="action_report_fs_fieldservice_stats_charts" model="ir.actions.report">
+      <field name="name">Resumen Field Service (Gráficos)</field>
+      <field name="model">fs.fieldservice.stats.wizard</field>
+      <field name="report_type">qweb-pdf</field>
+      <field name="report_name">fs_m2_cost.report_fs_fieldservice_stats_charts</field>
+      <field name="report_file">fs_m2_cost.report_fs_fieldservice_stats_charts</field>
+      <field name="print_report_name">
+        'Resumen_Field_Service_Graficos_%s_%s' % (object.date_from or '', object.date_to or '')
+      </field>
+    </record>
+
+    <!-- Plantilla QWeb del reporte de gráficos -->
+    <template id="report_fs_fieldservice_stats_charts">
+      <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="doc">
+          <t t-call="web.external_layout">
+            <div class="page">
+
+              <h2 style="margin-bottom: 8px;">Resumen Field Service (Operativo)</h2>
+
+              <p style="margin-bottom: 16px;">
+                <strong>Período:</strong>
+                <span t-esc="doc.date_from or ''"/> -
+                <span t-esc="doc.date_to or ''"/>
+              </p>
+
+              <!-- KPIs globales -->
+              <h3 style="margin-top: 8px; margin-bottom: 4px;">KPIs</h3>
+              <table class="table table-sm o_main_table" style="width: 100%; margin-bottom: 10px;">
+                <tr>
+                    <th style="width: 30%;">Colocaciones realizadas</th>
+                    <td style="width: 20%;"><span t-esc="doc.installation_count or 0"/></td>
+
+                    <th style="width: 30%;">M² instalados</th>
+                    <td style="width: 20%;"><span t-esc="doc.m2_installed_total or 0.0"/></td>
+                </tr>
+                <tr>
+                    <th>Colocaciones a tiempo</th>
+                    <td><span t-esc="doc.installation_on_time or 0"/></td>
+
+                    <th>Tomas de medida totales</th>
+                    <td><span t-esc="doc.measurement_count or 0"/></td>
+                </tr>
+                <tr>
+                    <th>Colocaciones tarde</th>
+                    <td><span t-esc="doc.installation_late or 0"/></td>
+
+                    <th>Tomas de medida con OV</th>
+                    <td><span t-esc="doc.measurement_with_so_count or 0"/></td>
+                </tr>
+                <tr>
+                    <th>Colocaciones sin llegada</th>
+                    <td><span t-esc="doc.installation_no_show or 0"/></td>
+
+                    <th>Tomas de medida sin OV</th>
+                    <td><span t-esc="doc.measurement_without_so_count or 0"/></td>
+                </tr>
+              </table>
+
+              <!-- Desglose de tomas de medida por compañía -->
+              <h3 style="margin-top: 16px; margin-bottom: 4px;">Desglose de Tomas de Medida por Compañía</h3>
+              <table class="table table-sm o_main_table" style="width: 100%; margin-bottom: 16px;">
+                <thead>
+                  <tr>
+                    <th style="width: 50%;">Con Orden de Venta</th>
+                    <th style="width: 50%;">Sin Orden de Venta</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="vertical-align: top; padding: 8px;">
+                      <t t-if="doc.measurement_with_so_by_company">
+                        <pre style="margin: 0; font-family: inherit;"><t t-esc="doc.measurement_with_so_by_company"/></pre>
+                      </t>
+                      <t t-else="">
+                        <span style="color: #999; font-style: italic;">No hay tomas de medida con OV</span>
+                      </t>
+                    </td>
+                    <td style="vertical-align: top; padding: 8px;">
+                      <t t-if="doc.measurement_without_so_by_company">
+                        <pre style="margin: 0; font-family: inherit;"><t t-esc="doc.measurement_without_so_by_company"/></pre>
+                      </t>
+                      <t t-else="">
+                        <span style="color: #999; font-style: italic;">No hay tomas de medida sin OV</span>
+                      </t>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- Tabla comparativa -->
+              <h3 style="margin-top: 16px; margin-bottom: 4px;">Comparativo por colocador</h3>
+              <table class="table table-sm o_main_table" style="width: 100%;">
+                <thead>
+                  <tr>
+                    <th>Colocador</th>
+                    <th style="text-align:center;">Tareas</th>
+                    <th style="text-align:center;">M² instalados</th>
+                    <th style="text-align:center;">M² pendientes</th>
+                    <th style="text-align:center;">m² / tarea</th>
+                    <th style="text-align:center;">% Cumplimiento</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <t t-if="not doc.line_ids">
+                    <tr>
+                      <td colspan="6" style="text-align:center;">No hay datos para el período indicado.</td>
+                    </tr>
+                  </t>
+                  <t t-foreach="doc.line_ids" t-as="line">
+                    <tr>
+                      <td><span t-esc="line.user_id.name or ''"/></td>
+                      <td style="text-align:center;"><span t-esc="line.tasks_done or 0"/></td>
+                      <td style="text-align:center;"><span t-esc="line.m2_installed or 0.0"/></td>
+                      <td style="text-align:center;"><span t-esc="line.m2_pending or 0.0"/></td>
+                      <td style="text-align:center;"><span t-esc="('%.2f' % (line.m2_per_task or 0.0))"/></td>
+                      <td style="text-align:center;"><span t-esc="('%.2f' % (line.completion_rate or 0.0))"/>%</td>
+                    </tr>
+                  </t>
+                </tbody>
+              </table>
+
+              <!-- Gráficas (2 columnas) -->
+              <h3 style="margin-top: 16px; margin-bottom: 6px;">Gráficas</h3>
+
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="width: 50%; vertical-align: top; padding-right: 8px;">
+                    <t t-if="doc.chart_punctuality_png">
+                      <h4 style="margin: 0 0 6px 0;">Puntualidad</h4>
+                      <img t-att-src="image_data_uri(doc.chart_punctuality_png)"
+                           style="max-width: 100%; max-height: 270px; height: auto; object-fit: contain;"/>
+                    <div style="font-size: 11px; color: #666; line-height: 1.25; margin-top: 4px;">
+                        <strong>Qué muestra:</strong> Distribución de colocaciones por estatus de llegada (A tiempo / Tarde / Sin llegada).<br/>
+                        <strong>Cálculo:</strong> Conteo de tareas de colocación (SCO o producto marcado como instalación) dentro del período.<br/>
+                        <strong>Interpretación:</strong> Mayor "A tiempo" indica mejor cumplimiento operativo; "Sin llegada" requiere atención inmediata.
+                    </div>
+                    </t>
+                  </td>
+                  <td style="width: 50%; vertical-align: top; padding-left: 8px;">
+                    <t t-if="doc.chart_expected_vs_installed_png">
+                      <h4 style="margin: 0 0 6px 0;">M2 Esperado vs Instalado</h4>
+                      <img t-att-src="image_data_uri(doc.chart_expected_vs_installed_png)"
+                           style="max-width: 100%; max-height: 270px; height: auto; object-fit: contain;"/>
+                          <div style="font-size: 11px; color: #666; line-height: 1.25; margin-top: 4px;">
+                            <strong>Qué muestra:</strong> Comparación de m² esperados contra m² instalados en colocaciones del período.<br/>
+                            <strong>Cálculo:</strong> Esperado = suma de <code>fs_expected_m2</code> en tareas de colocación; Instalado = suma de <code>fs_m2_cost</code> en timesheets ligados a esas tareas.<br/>
+                            <strong>Interpretación:</strong> Una brecha alta indica backlog; revisar capacidad, tiempos de agenda y bloqueos en obra.
+                        </div>
+                    </t>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="width: 50%; vertical-align: top; padding-right: 8px; padding-top: 10px;">
+                    <t t-if="doc.chart_ontime_trend_png">
+                      <h4 style="margin: 0 0 6px 0;">Tendencia % On-time</h4>
+                      <img t-att-src="image_data_uri(doc.chart_ontime_trend_png)"
+                           style="max-width: 100%; max-height: 270px; height: auto; object-fit: contain;"/>
+
+                        <div style="font-size: 11px; color: #666; line-height: 1.25; margin-top: 4px;">
+                            <strong>Qué muestra:</strong> Evolución semanal del porcentaje de colocaciones "A tiempo".<br/>
+                            <strong>Cálculo:</strong> % On-time = (colocaciones a tiempo / colocaciones totales) × 100, agrupado por semana según <code>date_deadline</code>.<br/>
+                            <strong>Interpretación:</strong> Caídas sostenidas suelen indicar saturación de agenda, rutas ineficientes o re-trabajos.
+                        </div>
+                    </t>
+                  </td>
+                  <td style="width: 50%; vertical-align: top; padding-left: 8px; padding-top: 10px;">
+                    <t t-if="doc.chart_m2_growth_png">
+                      <h4 style="margin: 0 0 6px 0;">Crecimiento m² (acumulado)</h4>
+                      <img t-att-src="image_data_uri(doc.chart_m2_growth_png)"
+                           style="max-width: 100%; max-height: 270px; height: auto; object-fit: contain;"/>
+                        <div style="font-size: 11px; color: #666; line-height: 1.25; margin-top: 4px;">
+                            <strong>Qué muestra:</strong> Acumulado semanal de m² instalados durante el período.<br/>
+                            <strong>Cálculo:</strong> Suma acumulada de <code>fs_m2_cost</code> (timesheets con m²) asociada a tareas de colocación, agrupada por semana.<br/>
+                            <strong>Interpretación:</strong> Un crecimiento "plano" puede significar falta de captura de timesheets o poca ejecución real.
+                        </div>
+                    </t>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="width: 50%; vertical-align: top; padding-right: 8px; padding-top: 10px;">
+                    <t t-if="doc.chart_installer_top_png">
+                      <h4 style="margin: 0 0 6px 0;">Top colocadores por m²</h4>
+                      <img t-att-src="image_data_uri(doc.chart_installer_top_png)"
+                           style="max-width: 100%; max-height: 270px; height: auto; object-fit: contain;"/>
+                    <div style="font-size: 11px; color: #666; line-height: 1.25; margin-top: 4px;">
+                        <strong>Qué muestra:</strong> Ranking de colocadores por m² instalados (asignación por usuarios en la tarea).<br/>
+                        <strong>Cálculo:</strong> Para cada tarea de colocación, los m² instalados de la tarea se suman a cada usuario en <code>task.user_ids</code> (lógica actual).<br/>
+                        <strong>Interpretación:</strong> Útil para balancear carga y detectar concentraciones de ejecución por cuadrilla/usuario.
+                    </div>
+                    </t>
+                  </td>
+                  <td style="width: 50%; vertical-align: top; padding-left: 8px; padding-top: 10px;">
+                    <t t-if="doc.chart_installer_stack_png">
+                      <h4 style="margin: 0 0 6px 0;">Instalados vs pendientes (Top 10)</h4>
+                      <img t-att-src="image_data_uri(doc.chart_installer_stack_png)"
+                          style="max-width: 100%; max-height: 270px; height: auto; object-fit: contain;"/>
+                        <div style="font-size: 11px; color: #666; line-height: 1.25; margin-top: 4px;">
+                            <strong>Qué muestra:</strong> m² instalados y m² pendientes por colocador (Top 10 por instalado).<br/>
+                            <strong>Cálculo:</strong> Pendiente = max(<code>fs_expected_m2</code> − m² instalados de la tarea, 0), agregado por colocador según <code>task.user_ids</code>.<br/>
+                            <strong>Interpretación:</strong> Pendiente alto con instalado bajo sugiere bloqueos; instalado alto con pendiente alto indica sobrecarga.
+                        </div>
+                    </t>
+                  </td>
+                </tr>
+              </table>
+              
+              
+              <h3 style="margin-top: 16px; margin-bottom: 6px;">Detalle de tareas por colaborador</h3>
+
+              <t t-if="not task_detail_by_installer">
+                <p style="color:#666;">No hay colocaciones en el período seleccionado.</p>
+              </t>
+
+              <t t-foreach="task_detail_by_installer" t-as="g">
+                <div style="margin-top: 10px; page-break-inside: avoid;">
+                  <h4 style="margin: 0 0 6px 0;">
+                    <span t-esc="g['installer_name']"/>
+                    <span style="font-weight: normal; color:#666; font-size:12px;">
+                      — Total instalado:
+                      <t t-esc="('%.2f' % (g['totals']['installed_m2'] or 0.0))"/> m²,
+                      Pendiente:
+                      <t t-esc="('%.2f' % (g['totals']['pending_m2'] or 0.0))"/> m²
+                    </span>
+                  </h4>
+
+                  <table class="table table-sm o_main_table" style="width: 100%; font-size: 12px;">
+                    <thead>
+                      <tr>
+                        <th>Cliente</th>
+                        <th>Orden de venta</th>
+                        <th>Servicio</th>
+                        <th>Tarea</th>
+                        <th>Estado</th>
+                        <th style="text-align:right;">m² instalados</th>
+                        <th style="text-align:right;">m² esperados</th>
+                        <th style="text-align:right;">m² pendientes</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <t t-foreach="g['rows']" t-as="r">
+                        <tr>
+                          <td t-esc="r['customer'] or ''"/>
+                          <td t-esc="r['sale_order'] or ''"/>
+                          <td t-esc="r['service'] or ''"/>
+                          <td t-esc="r['task_ref'] or ''"/>
+                          <td t-esc="r['task_stage'] or ''"/>
+                          <td style="text-align:right;"><t t-esc="('%.2f' % (r['installed_m2'] or 0.0))"/></td>
+                          <td style="text-align:right;"><t t-esc="('%.2f' % (r['expected_m2'] or 0.0))"/></td>
+                          <td style="text-align:right;"><t t-esc="('%.2f' % (r['pending_m2'] or 0.0))"/></td>
+                        </tr>
+                      </t>
+                    </tbody>
+                  </table>
+                </div>
+              </t>
+            </div>
+          </t>
+
+
+
+        </t>
+      </t>
+    </template>
+
+  </data>
+</odoo>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_task_form_inherit" model="ir.ui.view">
+        <field name="name">project.task.form.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="before">
+                <!-- Banner cuando la tarea NO está completada -->
+                <div class="alert alert-info o_fsm_open_banner"
+                     invisible="fsm_done == True"
+                     style="margin: 0;">
+                    <i class="fa fa-clock-o" title="Tarea activa"/> 
+                    <strong>Tarea Activa</strong> - 
+                    Los usuarios pueden registrar tiempo.
+                </div>
+                
+                <!-- Banner cuando la tarea SÍ está completada -->
+                <div class="alert alert-warning o_fsm_done_banner"
+                     invisible="fsm_done != True"
+                     style="margin: 0;">
+                    <i class="fa fa-exclamation-triangle" title="Tarea completada"/> 
+                    <strong>Tarea Completada</strong> - 
+                    Esta tarea está marcada como hecha. No permite el registro de tiempo. 
+                    Contacta a un administrador para reabrirla.
+                </div>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_fsm_reopen" 
+                        type="object" 
+                        string="Reabrir Tarea"
+                        class="btn-warning"
+                        invisible="fsm_done == False"
+                        groups="industry_fsm.group_fsm_manager"/>
+                <button name="action_complete_my_activities" 
+                        type="object" 
+                        string="Marcar mis actividades como hechas"
+                        class="btn-primary"
+                        icon="fa-check-circle"/>
+                
+                <button name="create_validation_activity" 
+                    type="object" 
+                    string="Notificar a Usuarios Asignados"
+                    class="btn-info"
+                    icon="fa-bell"
+                    invisible="stage_id != %(industry_fsm.planning_project_stage_1)d"/>
+                <button name="action_download_fsm_report" 
+                    type="object" 
+                    icon="fa-file-pdf-o"
+                    string="Descargar reporte pdf"
+                    class="btn-secondary"
+                    invisible="not display_sign_report_secondary or has_template_ancestor or has_project_template"
+                    />
+            </xpath>
+            <xpath expr="//field[@name='user_ids'][@class='o_task_user_field']" position="after">
+                <div class="d-flex justify-content-start mt-2">
+                    <button name="action_preview_worksheet" 
+                            string="Firmar Reporte" 
+                            type="object" 
+                            class="btn-info"
+                            invisible="not display_sign_report_secondary or has_template_ancestor or has_project_template"/>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='partner_id'][@class='o_task_customer_field']" position="after">
+                <field name="fs_service_template_id" 
+                    placeholder="Seleccionar cuando no hay OV..."
+                    options="{'no_create': True}"
+                    readonly="sale_line_id"
+                    invisible="sale_line_id"
+                    force_save="sale_line_id"
+                    help="Este servicio se usará para calcular tarifas cuando no hay orden de venta relacionada"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data noupdate="1">
+    <record id="view_order_form_fs_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.field.service.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- 0) Quitar el label y el campo commitment_date de la vista original -->
+            <xpath expr="//label[@for='commitment_date']" position="replace">
+                <!-- vacío: elimina el label -->
+            </xpath>
+
+            <xpath expr="//field[@name='commitment_date']" position="replace">
+                <!-- vacío: elimina el field -->
+            </xpath>
+
+            <!-- 1) Dirección de instalación debajo del partner -->
+            <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                <field name="fs_direccion_instalacion" required="1"/>
+            </xpath>
+             <xpath expr="//field[@name='date_order']" position="after">
+                <field name="commitment_date" required="1"/>
+            </xpath>
+
+             <xpath expr="//field[@name='commitment_date']" position="after">
+                    <!-- Etiqueta estándar -->
+                    <label for="fs_fecha_estimada_instalacion"/>
+
+                    <!-- Fila con campo + botón, alineados y sin empalme -->
+                    <div class="o_row o_fs_installation_row"
+                         style="display:flex; align-items:center; gap:8px;">
+                        <field name="fs_fecha_estimada_instalacion"
+                               class="o_fs_installation_date"/>
+
+                        <button name="action_fs_open_availability"
+                                type="object"
+                                string=" Ver disponibilidad"
+                                icon="fa-calendar"
+                                class="btn o_btn_fs_availability"
+                                style="background-color:#6f42c1;
+                                       border-color:#6f42c1;
+                                       color:#ffffff;
+                                       border-radius:6px;
+                                       padding:6px 12px;"/>
+                    </div>
+                </xpath>
+
+            <!-- 3) Link de Google Maps debajo de dirección de entrega -->
+            <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                <field name="fs_link_google_maps" widget="url"/>
+            </xpath>
+
+        </field>
+    </record>
+</data>
